@@ -1,6 +1,6 @@
 {
   "name": "swagger-to-typescript",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "directories": {
@@ -12,6 +12,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "camelcase": "^6.3.0",
+    "js-yaml": "^4.1.0",
     "node-fetch": "^3.2.0",
     "unique-username-generator": "^1.0.1"
   }
