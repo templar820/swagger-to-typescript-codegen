@@ -19,6 +19,7 @@ export default async function CreateApiService(config: ICreateApiServiceConfig) 
     execSync(`npx openapi-typescript ${config.swaggerEndpoint} --output ${filePath}`);
     await addPaths(config, filePath);
     //дождаться пока отработает, копирнуть в папку куда указал клиент
+    fs.copyFileSync(path.resolve("./src/api/Api.service.ts"), path.resolve(config.outputPath ,"Api.service.ts"))
 }
 
 

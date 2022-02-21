@@ -1,5 +1,6 @@
 import { pathList, PathListInterface } from './api';
-import jsonConfig from '../config.json';
+
+const restApiMethodsArray = ["get", "post", "put", "patch", "delete"]
 
 interface ApiServiceConfig {
     onBeforeRequest?: (path: string, parameters: any, type: string) => void;
@@ -32,7 +33,7 @@ class ApiService {
         const getNestedMethod = obj => {
             if (!this.isObject(obj)) return;
             for (const [key, value] of Object.entries(obj)) {
-                if (jsonConfig.restApiMethodsArray.includes(key)) {
+                if (restApiMethodsArray.includes(key)) {
                     const requestData = JSON.parse(JSON.stringify(obj[key]));
                     const headers = this.getHeaders();
                     obj[key] = ((...args) => {
