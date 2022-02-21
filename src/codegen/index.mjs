@@ -19,6 +19,7 @@ export default async function CreateApiService(config) {
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
     execSync(`npx openapi-typescript ${config.swaggerEndpoint} --output ${filePath}`);
     addPaths(config);
+    //дождаться пока отработает, копирнуть в папку куда указал клиент
 }
 
 
