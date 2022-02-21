@@ -1,5 +1,5 @@
-import { pathList, PathListInterface } from '../api/api';
-import jsonConfig from './config.json';
+import { pathList, PathListInterface } from './api';
+import jsonConfig from '../config.json';
 
 interface ApiServiceConfig {
     onBeforeRequest?: (path: string, parameters: any, type: string) => void;
@@ -139,7 +139,7 @@ class ApiService {
             if (requestOptions?.toFile) {
                 const data = new FormData();
                 for (const [key, value] of Object.entries(parameters)) {
-                    data.append(key, value);
+                    data.append(key, value as any);
                 }
                 options.body = data;
                 delete options.headers['Content-Type'];

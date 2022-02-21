@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "esModuleInterop": true,
+    "target": "ES2020",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "strict": false,
+    "resolveJsonModule": true,
+    "outDir": "dist"
+  },
+  "lib": ["es2018", "ES2021.String"]
+}

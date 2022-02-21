@@ -2,30 +2,29 @@ import path from 'path';
 import fs from 'fs';
 import { execSync } from "child_process";
 import requestConfig from "../config.json"
-import { generateName, getBodyType, getJSONSwagger, getMethodName, getParameters, getParametersType, getRequestHeadersType, getRequestMethods, getResponse, getSegmentName, mergeDeep, setCamelCaseKeys } from "./utils.mjs";
+import { generateName, replaceAll, getBodyType, getJSONSwagger, getMethodName, getParameters, getParametersType, getRequestMethods, getResponse, getSegmentName, mergeDeep, setCamelCaseKeys } from "./utlis";
 
-if (typeof String.prototype.replaceAll === 'undefined') {
-    String.prototype.replaceAll = function (match, replace) {
-        return this.replace(new RegExp(match, 'g'), () => replace);
-    };
+
+
+export interface ICreateApiServiceConfig{
+    outputPath:string;
+    swaggerEndpoint: string;
 }
 
-const fileName = './src/api/api.ts';
-const filePath = path.resolve(fileName);
 
-
-
-export default async function CreateApiService(config) {
+export default async function CreateApiService(config: ICreateApiServiceConfig) {
+    const fileName = path.join(config.outputPath, 'api.ts');
+    const filePath = path.resolve(fileName);
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
     execSync(`npx openapi-typescript ${config.swaggerEndpoint} --output ${filePath}`);
-    addPaths(config);
+    await addPaths(config, filePath);
     //дождаться пока отработает, копирнуть в папку куда указал клиент
 }
 
 
 let overloadType = "";
 
-const addPaths = async (config) => {
+const addPaths = async (config: ICreateApiServiceConfig, filePath: string) => {
     const json = await getJSONSwagger(config.swaggerEndpoint);
 
     const pathListInterface = swaggerParamsList(json, config, (restApiTag, jsonItem, segmentName, methodName, item, acc) => {
@@ -95,7 +94,7 @@ const addPaths = async (config) => {
 
     setCamelCaseKeys(pathListInterface);
     setCamelCaseKeys(pathList);
-    generateResult(pathListInterface, pathList)
+    generateResult(pathListInterface, pathList, filePath)
 };
 
 
@@ -134,23 +133,22 @@ function swaggerParamsList(json, config, callback){
     }, {});
 }
 
-index();
 
-
-function generateResult(pathListInterface, pathList){
+function generateResult(pathListInterface, pathList, filePath){
     const apiFile = fs.readFileSync(filePath, { encoding: 'utf8' });
 
     const result = `
-  ${overloadType.replaceAll('"', '')}
+  ${replaceAll(overloadType,'"', '')}
   
-  export interface PathListInterface ${JSON.stringify(
-        pathListInterface,
-        null,
-        2
-    )
-        .replaceAll('"', '')
-        .replaceAll(',\n', ';\n')
-        .replaceAll(/\\/g, '')
+  export interface PathListInterface ${
+  
+      replaceAll(
+        replaceAll(
+          replaceAll(
+            JSON.stringify(pathListInterface, null, 2),
+            '"', ''),
+          ',\n', ';\n'),
+        /\\/g, '')
     }\n
   export const pathList =  ${
         JSON.stringify(

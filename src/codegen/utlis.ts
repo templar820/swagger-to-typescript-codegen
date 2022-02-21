@@ -2,6 +2,7 @@ import fetch from "node-fetch";
 import yaml from "js-yaml";
 import camelCase from "camelcase";
 import genUsername from "unique-username-generator";
+import { uniqueNamesGenerator, Config, adjectives, colors, animals } from 'unique-names-generator';
 
 
 export  function getResponse(jsonItem, restApiTag,operations){
@@ -138,6 +139,14 @@ export function mergeDeep(target, ...sources) {
     return mergeDeep(target, ...sources);
 }
 
+export function replaceAll(string,match, replace){
+    return string.replace(new RegExp(match, 'g'), () => replace);
+}
+
 export function generateName(){
-    return genUsername.generateUsername("").replaceAll("-", "_")
+    return uniqueNamesGenerator({
+        style: "lowerCase",
+        dictionaries: [adjectives, colors, animals],
+    })
+    // return replaceAll(genUsername.generateUsername(""), "-", "_")
 }
