@@ -1,8 +1,7 @@
 import fetch from "node-fetch";
 import yaml from "js-yaml";
 import camelCase from "camelcase";
-import genUsername from "unique-username-generator";
-import { uniqueNamesGenerator, Config, adjectives, colors, animals } from 'unique-names-generator';
+import { uniqueNamesGenerator, adjectives, colors, animals } from 'unique-names-generator';
 
 
 export  function getResponse(jsonItem, restApiTag,operations){
