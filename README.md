@@ -9,6 +9,7 @@ create custom js script with
 ```js
 CreateApiService({
     outputPath: "./api", // url to generate service in your app
+    prefix: "Your API prefix", // for example: api -> /api/users/
     swaggerEndpoint: "YOUR_SWAGGER", // your swagger address (GET-Request)
 })
 ```
@@ -43,3 +44,18 @@ In your frontend App
 })
 ```
 
+## Example
+Typescript should tell you how to fill out the API correctly
+```js
+  // get /api/users/
+  const data = await apiService.requests.users.get();
+  // get /api/users/{id}/
+  const data = await apiService.requests.users.get({path:{id: 2}});
+  // post /api/users/{id}/
+  const data = await apiService.requests.users.post(user_model,{path:{id: 2}});
+  // get /api/users/?name=John
+  const data = await apiService.requests.users.get({query:{name: "John"}});
+  // get /api/users/{id}/?name=John
+  const data = await apiService.requests.users.get({path:{id:2},query:{name: "John"}});
+```
+patch, put, delete methods is supported

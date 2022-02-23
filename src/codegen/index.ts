@@ -3,8 +3,6 @@ import fs from 'fs';
 import { execSync } from "child_process";
 import requestConfig from "../config.json"
 import { generateName, replaceAll, getBodyType, getJSONSwagger, getMethodName, getParameters, getParametersType, getRequestMethods, getResponse, getSegmentName, mergeDeep, setCamelCaseKeys } from "./utlis";
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
 
 
 

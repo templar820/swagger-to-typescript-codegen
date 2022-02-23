@@ -1,9 +1,14 @@
 {
   "name": "swagger-to-typescript-codegen",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "description": "library to code-gen for typescript with swagger",
   "main": "dist/index.js",
   "module": "dist/index.js",
+  "funding": "https://github.com/templar820/swagger-to-typescript-codegen",
+  "author": {
+    "name": "Ivan Kuznetsov",
+    "email": "ttemplar820@gmail.com"
+  },
   "scripts": {
     "start": "tsc && node index.js"
   },
@@ -12,7 +17,6 @@
     "src/api",
     "README.md"
   ],
-  "author": "templar820",
   "license": "ISC",
   "dependencies": {
     "camelcase": "6.3.0",
@@ -24,8 +28,6 @@
     "@types/node": "^17.0.19",
     "@types/node-fetch": "^2.6.1",
     "ts-node": "^10.5.0",
-    "typescript": "^4.5.5",
-    "webpack": "^5.69.1",
-    "webpack-cli": "^4.9.2"
+    "typescript": "^4.5.5"
   }
 }
