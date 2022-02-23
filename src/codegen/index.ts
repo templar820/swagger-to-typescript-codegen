@@ -3,6 +3,8 @@ import fs from 'fs';
 import { execSync } from "child_process";
 import requestConfig from "../config.json"
 import { generateName, replaceAll, getBodyType, getJSONSwagger, getMethodName, getParameters, getParametersType, getRequestMethods, getResponse, getSegmentName, mergeDeep, setCamelCaseKeys } from "./utlis";
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
 
 
@@ -19,7 +21,7 @@ export default async function CreateApiService(config: ICreateApiServiceConfig) 
     execSync(`npx openapi-typescript ${config.swaggerEndpoint} --output ${filePath}`);
     await addPaths(config, filePath);
     //дождаться пока отработает, копирнуть в папку куда указал клиент
-    fs.copyFileSync(path.resolve("./src/api/Api.service.ts"), path.resolve(config.outputPath ,"Api.service.ts"))
+    fs.copyFileSync(path.resolve(__dirname, "../../src/api/Api.service.ts"), path.resolve(config.outputPath ,"Api.service.ts"))
 }
 
 
