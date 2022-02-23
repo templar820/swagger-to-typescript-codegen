@@ -7,6 +7,8 @@ Yaml and json format is supported
 create custom js script with
 
 ```js
+const {CreateApiService} =  require("swagger-to-typescript-codegen");
+
 CreateApiService({
     outputPath: "./api", // url to generate service in your app
     prefix: "Your API prefix", // for example: api -> /api/users/

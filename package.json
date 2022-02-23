@@ -1,10 +1,11 @@
 {
   "name": "swagger-to-typescript-codegen",
-  "version": "0.0.22",
+  "version": "0.0.24",
   "description": "library to code-gen for typescript with swagger",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "funding": "https://github.com/templar820/swagger-to-typescript-codegen",
+  "repository": "templar820/swagger-to-typescript-codegen",
   "author": {
     "name": "Ivan Kuznetsov",
     "email": "ttemplar820@gmail.com"
@@ -15,9 +16,21 @@
   "files": [
     "dist",
     "src/api",
+    "license",
     "README.md"
   ],
-  "license": "ISC",
+  "engines": {
+    "node": ">=12"
+  },
+  "keywords": [
+    "swagger",
+    "typescript",
+    "swagger-to-typescript",
+    "swagger-ts",
+    "openapi-to-ts",
+    "convert"
+  ],
+  "license": "MIT",
   "dependencies": {
     "camelcase": "6.3.0",
     "js-yaml": "^4.1.0",
