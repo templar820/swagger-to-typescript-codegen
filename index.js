@@ -1,6 +1,8 @@
 const {CreateApiService} = require("./dist/index");
+const path = require("path")
+
 
 CreateApiService({
     outputPath: "./api",
-    swaggerEndpoint: "http://51.250.9.175/api/schema/?format=yaml",
+    swaggerEndpoint: path.resolve(__dirname, "./swagger.yaml"),
 })

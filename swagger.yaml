@@ -1,0 +1,1088 @@
+basePath: /api
+consumes:
+  - application/json
+definitions:
+  GoodsModel:
+    properties:
+      id:
+        type: number
+        format: double
+      name:
+        type: string
+      requirements:
+        type: string
+      count:
+        type: number
+        format: double
+      weight:
+        type: number
+        format: double
+      volume:
+        type: number
+        format: double
+    required:
+      - id
+      - name
+      - requirements
+      - count
+      - weight
+      - volume
+    type: object
+    additionalProperties: false
+  ApplicationsModel:
+    properties:
+      id:
+        type: number
+        format: double
+      date:
+        type: string
+      current_status:
+        type: string
+      dispatch_date:
+        type: string
+      arrival_date:
+        type: string
+      price:
+        type: number
+        format: double
+      appl_return_id:
+        type: number
+        format: double
+      goods:
+        items:
+          $ref: '#/definitions/GoodsModel'
+        type: array
+      sender_id:
+        type: number
+        format: double
+      recipient_id:
+        type: number
+        format: double
+      point_from_id:
+        type: number
+        format: double
+      point_to_id:
+        type: number
+        format: double
+      senderResponsibleId:
+        type: number
+        format: double
+      recipientResponsibleId:
+        type: number
+        format: double
+      route_id:
+        type: number
+        format: double
+    required:
+      - id
+      - date
+      - current_status
+      - dispatch_date
+      - arrival_date
+      - price
+      - appl_return_id
+      - goods
+      - sender_id
+      - recipient_id
+      - point_from_id
+      - point_to_id
+      - senderResponsibleId
+      - recipientResponsibleId
+      - route_id
+    type: object
+    additionalProperties: false
+  FilterAreaStart:
+    properties:
+      current_status:
+        type: string
+      point_from_id:
+        type: number
+        format: double
+    required:
+      - current_status
+      - point_from_id
+    type: object
+    additionalProperties: false
+  FilterAreaEnd:
+    properties:
+      current_status:
+        type: string
+      point_to_id:
+        type: number
+        format: double
+    required:
+      - current_status
+      - point_to_id
+    type: object
+    additionalProperties: false
+  FilterAreaFull:
+    properties:
+      current_status:
+        type: string
+      point_to_id:
+        type: number
+        format: double
+      point_from_id:
+        type: number
+        format: double
+    required:
+      - current_status
+      - point_to_id
+      - point_from_id
+    type: object
+    additionalProperties: false
+  IAppRoute:
+    properties:
+      applicationId:
+        items:
+          type: number
+          format: double
+        type: array
+      route:
+        type: number
+        format: double
+    required:
+      - applicationId
+      - route
+    type: object
+    additionalProperties: false
+  SearchArea:
+    properties:
+      offset:
+        type: number
+        format: double
+      limit:
+        type: number
+        format: double
+      query:
+        type: string
+    required:
+      - offset
+      - limit
+      - query
+    type: object
+    additionalProperties: false
+  PointsModel:
+    properties:
+      id:
+        type: number
+        format: double
+      address:
+        type: string
+      name:
+        type: string
+      'y':
+        type: number
+        format: double
+      x:
+        type: number
+        format: double
+    required:
+      - id
+      - address
+      - name
+      - 'y'
+      - x
+    type: object
+    additionalProperties: false
+  OrganisationsModel:
+    properties:
+      id:
+        type: number
+        format: double
+      name:
+        type: string
+      inn:
+        type: number
+        format: double
+      disabled:
+        type: boolean
+    required:
+      - id
+      - name
+      - inn
+      - disabled
+    type: object
+    additionalProperties: false
+  ResponsiblesModel:
+    properties:
+      id:
+        type: number
+        format: double
+      FIO:
+        type: string
+      phone:
+        type: string
+      email:
+        type: string
+      organisations_id:
+        type: number
+        format: double
+      disabled:
+        type: boolean
+    required:
+      - id
+      - FIO
+      - phone
+      - email
+      - organisations_id
+      - disabled
+    type: object
+    additionalProperties: false
+  Users:
+    properties:
+      id:
+        type: number
+        format: double
+      email:
+        type: string
+      password:
+        type: string
+      phone:
+        type: string
+      name:
+        type: string
+      first_name:
+        type: string
+      patronymic:
+        type: string
+      role:
+        type: string
+      pointId:
+        type: string
+    required:
+      - id
+      - email
+      - password
+      - phone
+      - name
+      - first_name
+      - patronymic
+      - role
+      - pointId
+    type: object
+    additionalProperties: false
+  AuthCred:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+      - email
+      - password
+    type: object
+    additionalProperties: false
+  RouteModel:
+    properties:
+      id:
+        type: number
+        format: double
+      status:
+        type: string
+      order:
+        type: number
+        format: double
+      plan_date_from:
+        type: string
+      fact_date_from:
+        type: string
+      plan_date_to:
+        type: string
+      fact_date_to:
+        type: string
+      point_from_id:
+        type: number
+        format: double
+      point_to_id:
+        type: number
+        format: double
+    required:
+      - id
+      - status
+      - order
+      - plan_date_from
+      - fact_date_from
+      - plan_date_to
+      - fact_date_to
+      - point_from_id
+      - point_to_id
+    type: object
+    additionalProperties: false
+  SheetsModel:
+    properties:
+      id:
+        type: number
+        format: double
+      status:
+        type: string
+      courier_id:
+        type: number
+        format: double
+      routes:
+        items:
+          $ref: '#/definitions/RouteModel'
+        type: array
+    required:
+      - id
+      - status
+      - courier_id
+      - routes
+    type: object
+    additionalProperties: false
+  SheetsCourierModel:
+    properties:
+      route_sheets_id:
+        type: number
+        format: double
+      courier_id:
+        type: number
+        format: double
+    required:
+      - route_sheets_id
+      - courier_id
+    type: object
+    additionalProperties: false
+  Filter:
+    properties:
+      status:
+        type: string
+    required:
+      - status
+    type: object
+    additionalProperties: false
+  StatsModel:
+    properties:
+      name:
+        type: string
+      date:
+        type: string
+      value:
+        type: number
+        format: double
+    required:
+      - name
+      - date
+      - value
+    type: object
+    additionalProperties: false
+info:
+  title: backend
+  version: 1.0.0
+  license:
+    name: ISC
+paths:
+  /applications/filter/start:
+    post:
+      operationId: GetFilterFrom
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok
+          schema:
+            items:
+              $ref: '#/definitions/ApplicationsModel'
+            type: array
+      tags:
+        - ApplicationsModel
+      security:
+        - api_key: []
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/FilterAreaStart'
+  /applications/filter/end:
+    post:
+      operationId: GetFilterTo
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok
+          schema:
+            items:
+              $ref: '#/definitions/ApplicationsModel'
+            type: array
+      tags:
+        - ApplicationsModel
+      security:
+        - api_key: []
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/FilterAreaEnd'
+  /applications/filter/full:
+    post:
+      operationId: GetFilterFull
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok
+          schema:
+            items:
+              $ref: '#/definitions/ApplicationsModel'
+            type: array
+      tags:
+        - ApplicationsModel
+      security:
+        - api_key: []
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/FilterAreaFull'
+  /applications/{id}:
+    get:
+      operationId: GetById
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/ApplicationsModel'
+      tags:
+        - ApplicationsModel
+      security:
+        - api_key: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          format: double
+          type: number
+  /applications:
+    post:
+      operationId: Insert
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/ApplicationsModel'
+      tags:
+        - ApplicationsModel
+      security:
+        - api_key: []
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/ApplicationsModel'
+    patch:
+      operationId: Update
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok
+          schema:
+            items:
+              $ref: '#/definitions/ApplicationsModel'
+            type: array
+      tags:
+        - ApplicationsModel
+      security:
+        - api_key: []
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/ApplicationsModel'
+  /applications/route:
+    patch:
+      operationId: Update
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok
+          schema:
+            items:
+              $ref: '#/definitions/ApplicationsModel'
+            type: array
+      tags:
+        - ApplicationsModel
+      security:
+        - api_key: []
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/IAppRoute'
+  /applications/search:
+    post:
+      operationId: Search
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok
+          schema:
+            properties:
+              products:
+                items:
+                  $ref: '#/definitions/ApplicationsModel'
+                type: array
+              count:
+                type: number
+                format: double
+            required:
+              - count
+              - products
+            type: object
+      tags:
+        - ApplicationsModel
+      security:
+        - api_key: []
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/SearchArea'
+  /applications/return/{id}:
+    patch:
+      operationId: ApplReturn
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/ApplicationsModel'
+      tags:
+        - ApplicationsModel
+      security:
+        - api_key: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          format: double
+          type: number
+  /points:
+    get:
+      operationId: GetAll
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok
+          schema:
+            items:
+              $ref: '#/definitions/PointsModel'
+            type: array
+      tags:
+        - PointsModel
+      security:
+        - api_key: []
+      parameters: []
+  /points/{id}:
+    get:
+      operationId: GetById
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/PointsModel'
+      tags:
+        - PointsModel
+      security:
+        - api_key: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          format: double
+          type: number
+  /organisations:
+    post:
+      operationId: Create
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/OrganisationsModel'
+      tags:
+        - OrganisationsModel
+      security:
+        - api_key: []
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/OrganisationsModel'
+    get:
+      operationId: GetAll
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/OrganisationsModel'
+      tags:
+        - OrganisationsModel
+      security:
+        - api_key: []
+      parameters: []
+  /organisations/{id}:
+    get:
+      operationId: GetOne
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/OrganisationsModel'
+      tags:
+        - OrganisationsModel
+      security:
+        - api_key: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          format: double
+          type: number
+    delete:
+      operationId: Delete
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/OrganisationsModel'
+      tags:
+        - OrganisationsModel
+      security:
+        - api_key: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          format: double
+          type: number
+  /organisations/responsibles/{id}:
+    get:
+      operationId: GetWithResponsibles
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/OrganisationsModel'
+      tags:
+        - OrganisationsModel
+      security:
+        - api_key: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          format: double
+          type: number
+  /responsibles:
+    post:
+      operationId: Create
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/ResponsiblesModel'
+      tags:
+        - ResponsiblesModel
+      security:
+        - api_key: []
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/ResponsiblesModel'
+    get:
+      operationId: GetAll
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/ResponsiblesModel'
+      tags:
+        - ResponsiblesModel
+      security:
+        - api_key: []
+      parameters: []
+  /responsibles/{id}:
+    get:
+      operationId: GetOne
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/ResponsiblesModel'
+      tags:
+        - ResponsiblesModel
+      security:
+        - api_key: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          format: double
+          type: number
+    delete:
+      operationId: Delete
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/ResponsiblesModel'
+      tags:
+        - ResponsiblesModel
+      security:
+        - api_key: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          format: double
+          type: number
+  /user:
+    post:
+      operationId: CreateUser
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/Users'
+      tags:
+        - User
+      security: []
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/Users'
+    get:
+      operationId: GetAll
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok
+          schema:
+            items:
+              $ref: '#/definitions/Users'
+            type: array
+      tags:
+        - User
+      security: []
+      parameters: []
+  /user/login:
+    post:
+      operationId: LoginUser
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok
+          schema:
+            properties:
+              token:
+                type: string
+            required:
+              - token
+            type: object
+      tags:
+        - User
+      security: []
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/AuthCred'
+  /user/userInfo:
+    get:
+      operationId: GetUserByToken
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/Users'
+      tags:
+        - User
+      security: []
+      parameters:
+        - in: header
+          name: token
+          required: true
+          type: string
+  /user/role/{role}:
+    get:
+      operationId: GetByRole
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok
+          schema:
+            items:
+              $ref: '#/definitions/Users'
+            type: array
+      tags:
+        - User
+      security: []
+      parameters:
+        - in: path
+          name: role
+          required: true
+          type: string
+  /sheets:
+    post:
+      operationId: SetCourier
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/SheetsModel'
+      tags:
+        - SheetsModel
+      security:
+        - api_key: []
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/SheetsCourierModel'
+    patch:
+      operationId: Update
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/SheetsModel'
+      tags:
+        - SheetsModel
+      security:
+        - api_key: []
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/SheetsModel'
+  /sheets/filter:
+    post:
+      operationId: Filter
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok
+          schema:
+            items:
+              $ref: '#/definitions/SheetsModel'
+            type: array
+      tags:
+        - SheetsModel
+      security:
+        - api_key: []
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/Filter'
+  /sheets/{id}:
+    get:
+      operationId: GetById
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/SheetsModel'
+      tags:
+        - SheetsModel
+      security:
+        - api_key: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          format: double
+          type: number
+  /sheets/bycourier/{id}:
+    get:
+      operationId: GetByCourier
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/SheetsModel'
+      tags:
+        - SheetsModel
+      security:
+        - api_key: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          format: double
+          type: number
+  /routes/{id}:
+    get:
+      operationId: GetById
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/RouteModel'
+      tags:
+        - RoutesModel
+      security:
+        - api_key: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          format: double
+          type: number
+  /routes:
+    patch:
+      operationId: UpdateRoute
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/RouteModel'
+      tags:
+        - RoutesModel
+      security:
+        - api_key: []
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/RouteModel'
+  /routes/done/{id}:
+    patch:
+      operationId: DoneRoute
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/RouteModel'
+      tags:
+        - RoutesModel
+      security:
+        - api_key: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          format: double
+          type: number
+  /stats/prices/{period}:
+    get:
+      operationId: GetAllPrices
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/StatsModel'
+      tags:
+        - StatsModel
+      security:
+        - api_key: []
+      parameters:
+        - in: path
+          name: period
+          required: true
+          type: string
+  /stats/volumes/{period}:
+    get:
+      operationId: GetAllVolumes
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/StatsModel'
+      tags:
+        - StatsModel
+      security:
+        - api_key: []
+      parameters:
+        - in: path
+          name: period
+          required: true
+          type: string
+produces:
+  - application/json
+swagger: '2.0'
+securityDefinitions:
+  api_key:
+    type: apiKey
+    name: token
+    description: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGFkbWluIiwiaWQiOjEsInJvbGUiOiJBRE1JTiIsImlhdCI6MTYyODc1OTMyN30.KesrCniRts_6y6ISjjCwWENZLzoAtYCQzg3OB-thDKs
+    in: header
+tags:
+  - name: ApplicationsModel
+    description: Операции доступные с заявками
+  - name: PointsModel
+    description: Операции для точек
+  - name: User
+    description: Операции с пользователем
