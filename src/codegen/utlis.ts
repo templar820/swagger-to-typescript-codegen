@@ -4,6 +4,7 @@ import camelCase from 'camelcase';
 import {
   uniqueNamesGenerator, adjectives, colors, animals
 } from 'unique-names-generator';
+import fs from "fs";
 
 export function getResponse(jsonItem, restApiTag, operations) {
   const responseStatus = getResponseStatus(jsonItem, restApiTag);
@@ -33,13 +34,13 @@ function isJson(str) {
 }
 
 export async function getJSONSwagger(url) {
-  console.log(11111111, url);
-  const res = await fetch(url, {
-    headers: {
-      'Content-Type': 'text/html'
-    }
-  });
-  const data = await res.text();
+  // const res = await fetch(url, {
+  //   headers: {
+  //     'Content-Type': 'text/html'
+  //   }
+  // });
+  // const data = await res.text();
+  const data = fs.readFileSync(url);
   if (isJson(data)) {
     return JSON.parse(data);
   }
