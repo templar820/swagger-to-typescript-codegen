@@ -5,6 +5,8 @@ import {
   uniqueNamesGenerator, adjectives, colors, animals
 } from 'unique-names-generator';
 import fs from "fs";
+import requestConfig from '../config.json';
+import RequestTreeTag from './RequestTreeTag';
 
 export function getResponse(jsonItem, restApiTag, operations) {
   const responseStatus = getResponseStatus(jsonItem, restApiTag);
@@ -34,28 +36,20 @@ function isJson(str) {
 }
 
 export async function getJSONSwagger(url) {
-  // const res = await fetch(url, {
-  //   headers: {
-  //     'Content-Type': 'text/html'
-  //   }
-  // });
-  // const data = await res.text();
-  const data = fs.readFileSync(url);
+  const res = await fetch(url, {
+    headers: {
+      'Content-Type': 'text/html'
+    }
+  });
+  const data = await res.text();
+  // const data = fs.readFileSync(url);
   if (isJson(data)) {
-    return JSON.parse(data);
+    return JSON.parse(data as any);
   }
   return yaml.load(data, 'utf8');
 }
 
 export const getRequestMethods = (jsonItem, allMethods) => allMethods.filter(el => el in jsonItem);
-
-export const getMethodName = (sectionsArray, prefixName) => [...sectionsArray].reverse()
-  .find(el => el !== prefixName && !el.includes('{'));
-
-export const getSegmentName = (sectionsArray, prefixName) => {
-  const prefixIndex = sectionsArray.findIndex(el => el === prefixName);
-  return sectionsArray[prefixIndex + 1];
-};
 
 export const getBodyType = (jsonItem, restApiTag) => {
   let answer = '';
@@ -107,34 +101,11 @@ export const setCamelCaseKeys = obj => {
   });
 };
 
-export function getRequestHeadersType(operation) {
-  if (operation.requestBody) {
-    return Object.keys(operation.requestBody.content)[0];
-  }
-  return 'application/json';
-}
 
 export function isObject(item) {
   return (item && typeof item === 'object' && !Array.isArray(item));
 }
 
-export function mergeDeep(target, ...sources) {
-  if (!sources.length) return target;
-  const source = sources.shift();
-
-  if (isObject(target) && isObject(source)) {
-    for (const key in source) {
-      if (isObject(source[key])) {
-        if (!target[key]) Object.assign(target, { [key]: {} });
-        mergeDeep(target[key], source[key]);
-      } else {
-        Object.assign(target, { [key]: source[key] });
-      }
-    }
-  }
-
-  return mergeDeep(target, ...sources);
-}
 
 export function replaceAll(string, match, replace) {
   return string.replace(new RegExp(match, 'g'), () => replace);
@@ -145,5 +116,21 @@ export function generateName() {
     style: 'lowerCase',
     dictionaries: [adjectives, colors, animals],
   });
-  // return replaceAll(genUsername.generateUsername(""), "-", "_")
+}
+
+export function swaggerParamsList(json, config, callback) {
+  const pathsArray = Object.keys(json.paths);
+  return (pathsArray.reduce((acc, item) => {
+    const jsonItem = json.paths[item];
+    const methods = getRequestMethods(jsonItem, requestConfig.restApiMethodsArray);
+    if (!methods.length) return acc;
+    const arr = item.split('/').filter(el => !!el);
+
+    methods.forEach(restApiTag => {
+      const result = callback(restApiTag, jsonItem, [...arr, restApiTag], item, acc);
+      const path = arr.filter(el => !el.includes("{"))
+      acc.addElementInTree([...path, restApiTag], result);
+    });
+    return acc;
+  }, new RequestTreeTag())).tree;
 }

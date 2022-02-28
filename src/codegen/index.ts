@@ -1,10 +1,10 @@
 import path from 'path';
 import fs from 'fs';
 import { execSync } from 'child_process';
-import requestConfig from '../config.json';
 import {
-  generateName, replaceAll, getBodyType, getJSONSwagger, getMethodName, getParameters, getParametersType, getRequestMethods, getResponse, getSegmentName, mergeDeep, setCamelCaseKeys
+  generateName, replaceAll, getBodyType, getJSONSwagger, swaggerParamsList, getParameters, getParametersType, getResponse, setCamelCaseKeys
 } from './utlis';
+import RequestTreeTag from './RequestTreeTag';
 
 export interface ICreateApiServiceConfig{
     outputPath:string;
@@ -26,7 +26,38 @@ let overloadType = '';
 const addPaths = async (config: ICreateApiServiceConfig, filePath: string) => {
   const json = await getJSONSwagger(config.swaggerEndpoint);
 
-  const pathListInterface = swaggerParamsList(json, config, (restApiTag, jsonItem, segmentName, methodName, item, acc) => {
+  const pathListInterface = getPathListInterface(json, config)
+
+  const pathList = getPathList(json, config)
+
+  setCamelCaseKeys(pathListInterface);
+  setCamelCaseKeys(pathList);
+  generateResult(pathListInterface, pathList, filePath);
+};
+
+
+
+function getPathList(json, config){
+  return swaggerParamsList(json, config, (restApiTag, jsonItem, path: string[], item, acc: RequestTreeTag) => {
+    const { operationId } = jsonItem[restApiTag];
+    const bodyType = getBodyType(jsonItem, restApiTag);
+    const newData = {
+      id: operationId,
+      body: !!bodyType,
+      parameters: getParameters(jsonItem, restApiTag),
+      path: item,
+    };
+    if (Object.keys(acc.getElement(path)).length) {
+      const oldData = acc.getElement(path);
+      return [newData, Array.isArray(oldData) ? [...oldData] : oldData];
+    }
+    return newData;
+  });
+}
+
+
+function getPathListInterface(json, config){
+  return swaggerParamsList(json, config, (restApiTag, jsonItem, path, item, acc: RequestTreeTag) => {
     const bodyType = getBodyType(jsonItem, restApiTag);
     const parametersType = getParametersType(jsonItem, restApiTag);
 
@@ -48,78 +79,18 @@ const addPaths = async (config: ICreateApiServiceConfig, filePath: string) => {
       functionType = `"() => ${answer}"`;
     }
     const name = generateName();
-    if (segmentName === methodName && acc[segmentName] && acc[segmentName][restApiTag]) {
-      const oldType = acc[segmentName][restApiTag];
-      overloadType += oldType.replace('(', `function ${name} (`).replace('=>', ':') + '\n';
-      overloadType += functionType.replace('(', `function ${name} (`).replace('=>', ':') + '\n';
-      functionType = `typeof ${name}`;
-    } else if (acc[segmentName] && acc[segmentName][methodName] && acc[segmentName][methodName][restApiTag]) {
-      const oldType = acc[segmentName][methodName][restApiTag];
+
+    if (Object.keys(acc.getElement(path)).length) {
+      const oldType = acc.getElement(path);
       overloadType += oldType.replace('(', `function ${name} (`).replace('=>', ':') + '\n';
       overloadType += functionType.replace('(', `function ${name} (`).replace('=>', ':') + '\n';
       functionType = `typeof ${name}`;
     }
     return functionType;
   });
-
-  const pathList = swaggerParamsList(json, config, (restApiTag, jsonItem, segmentName, methodName, item, acc) => {
-    const { operationId } = jsonItem[restApiTag];
-    const bodyType = getBodyType(jsonItem, restApiTag);
-    const newData = {
-      id: operationId,
-      body: !!bodyType,
-      parameters: getParameters(jsonItem, restApiTag),
-      path: item,
-    };
-
-    if (segmentName === methodName && acc[segmentName] && acc[segmentName][restApiTag]) {
-      const oldData = acc[segmentName][restApiTag];
-      return [newData, oldData];
-    } if (acc[segmentName] && acc[segmentName][methodName] && acc[segmentName][methodName][restApiTag]) {
-      const oldData = acc[segmentName][methodName][restApiTag];
-      return [newData, Array.isArray(oldData) ? [...oldData] : oldData];
-    }
-    return newData;
-  });
-
-  setCamelCaseKeys(pathListInterface);
-  setCamelCaseKeys(pathList);
-  generateResult(pathListInterface, pathList, filePath);
-};
-
-function swaggerParamsList(json, config, callback) {
-  const pathsArray = Object.keys(json.paths);
-  return pathsArray.reduce((acc, item) => {
-    const jsonItem = json.paths[item];
-    const methods = getRequestMethods(jsonItem, requestConfig.restApiMethodsArray);
-    if (!methods.length) return acc;
-    const arr = item.split('/').filter(el => !!el);
-    const segmentName = getSegmentName(arr, config.prefix);
-    const methodName = getMethodName(arr, config.prefix);
-
-    if (!segmentName || !methodName) return acc;
-    const oldMethods = acc[segmentName] || {};
-    const newMethod = {};
-    const path = [...new Set([segmentName, methodName])];
-
-    methods.forEach(restApiTag => {
-      const result = callback(restApiTag, jsonItem, segmentName, methodName, item, acc);
-      if (segmentName === methodName) {
-        newMethod[restApiTag] = result;
-      } else {
-        mergeDeep(newMethod, {
-          [methodName]: {
-            [restApiTag]: result
-          }
-        });
-      }
-    });
-    return {
-      ...acc,
-      [segmentName]: mergeDeep(oldMethods, newMethod),
-    };
-  }, {});
 }
+
+
 
 function generateResult(pathListInterface, pathList, filePath) {
   const apiFile = fs.readFileSync(filePath, { encoding: 'utf8' });
