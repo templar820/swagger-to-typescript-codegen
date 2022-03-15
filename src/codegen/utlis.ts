@@ -127,8 +127,9 @@ export function swaggerParamsList(json, config, callback) {
     const arr = item.split('/').filter(el => !!el);
 
     methods.forEach(restApiTag => {
-      const result = callback(restApiTag, jsonItem, [...arr, restApiTag], item, acc);
-      const path = arr.filter(el => !el.includes("{"))
+      const path = arr.filter(el => !el.includes("{"));
+      const result = callback(restApiTag, jsonItem, [...path, restApiTag], item, acc);
+
       acc.addElementInTree([...path, restApiTag], result);
     });
     return acc;

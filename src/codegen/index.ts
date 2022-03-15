@@ -25,19 +25,21 @@ let overloadType = '';
 
 const addPaths = async (config: ICreateApiServiceConfig, filePath: string) => {
   const json = await getJSONSwagger(config.swaggerEndpoint);
-
-  const pathListInterface = getPathListInterface(json, config)
-
-  const pathList = getPathList(json, config)
-
-  setCamelCaseKeys(pathListInterface);
-  setCamelCaseKeys(pathList);
+  let pathListInterface = {};
+  let pathList = {};
+  try {
+    pathListInterface = getPathListInterface(json, config);
+    pathList = getPathList(json, config);
+    setCamelCaseKeys(pathListInterface);
+    setCamelCaseKeys(pathList);
+  } catch (e) {
+    console.log(e);
+  }
+  
   generateResult(pathListInterface, pathList, filePath);
 };
 
-
-
-function getPathList(json, config){
+function getPathList(json, config) {
   return swaggerParamsList(json, config, (restApiTag, jsonItem, path: string[], item, acc: RequestTreeTag) => {
     const { operationId } = jsonItem[restApiTag];
     const bodyType = getBodyType(jsonItem, restApiTag);
@@ -48,19 +50,18 @@ function getPathList(json, config){
       path: item,
     };
     if (Object.keys(acc.getElement(path)).length) {
-      const oldData = acc.getElement(path);
+      const oldData = acc.getElement(path)[restApiTag];
       return [newData, Array.isArray(oldData) ? [...oldData] : oldData];
     }
     return newData;
   });
 }
 
-
-function getPathListInterface(json, config){
+function getPathListInterface(json, config) {
   return swaggerParamsList(json, config, (restApiTag, jsonItem, path, item, acc: RequestTreeTag) => {
     const bodyType = getBodyType(jsonItem, restApiTag);
     const parametersType = getParametersType(jsonItem, restApiTag);
-
+  
     let functionType = '';
     const operations = `operations['${jsonItem[restApiTag].operationId}']`;
     const answer = `Promise<${getResponse(jsonItem, restApiTag, operations)}>`;
@@ -79,9 +80,10 @@ function getPathListInterface(json, config){
       functionType = `"() => ${answer}"`;
     }
     const name = generateName();
-
+  
+  
     if (Object.keys(acc.getElement(path)).length) {
-      const oldType = acc.getElement(path);
+      const oldType = acc.getElement(path)[restApiTag];
       overloadType += oldType.replace('(', `function ${name} (`).replace('=>', ':') + '\n';
       overloadType += functionType.replace('(', `function ${name} (`).replace('=>', ':') + '\n';
       functionType = `typeof ${name}`;
@@ -89,8 +91,6 @@ function getPathListInterface(json, config){
     return functionType;
   });
 }
-
-
 
 function generateResult(pathListInterface, pathList, filePath) {
   const apiFile = fs.readFileSync(filePath, { encoding: 'utf8' });
