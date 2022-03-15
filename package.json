@@ -1,6 +1,6 @@
 {
   "name": "swagger-to-typescript-codegen",
-  "version": "0.0.31",
+  "version": "0.0.32",
   "description": "library to code-gen for typescript with swagger",
   "main": "dist/index.js",
   "module": "dist/index.js",
