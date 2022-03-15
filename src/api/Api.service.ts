@@ -131,7 +131,7 @@ class ApiService {
     return (item && typeof item === 'object' && !Array.isArray(item));
   }
 
-  private async fetch(alias, parameters, type = 'POST', headers, requestOptions) {
+  async fetch(alias, parameters, type = 'POST', headers, requestOptions) {
     const options: requestOptionsType = {
       method: type.toUpperCase(),
       headers,
